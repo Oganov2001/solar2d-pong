@@ -3,4 +3,4 @@ A Pong clone made with Solar2D/CoronaSDK. Created for practice.
 
 # NOTE
 
-This is repo is WIP.
+This repo is WIP.
