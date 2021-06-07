@@ -4,6 +4,10 @@
 --
 -----------------------------------------------------------------------------------------
 
+-- Engine
+
+local math = require("math")
+
 -- Data
 
 local paddle_size = {}
@@ -13,6 +17,11 @@ paddle_size.y = 128
 local score = {}
 score.player = 0
 score.enemy = 0
+
+local ball_speed = 4
+local ball_velocity = {}
+ball_velocity.x = ball_speed
+ball_velocity.y = ball_speed
 
 -- Setup
 
@@ -39,6 +48,12 @@ local function playerMove(event)
     end
 end
 
+local function ballMove()
+    ball.x = ball.x + ball_velocity.x
+    ball.y = ball.y + ball_velocity.y
+end
+
 -- Main
 
 Runtime:addEventListener("touch", playerMove)
+Runtime:addEventListener("lateUpdate", ballMove)
