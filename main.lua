@@ -7,6 +7,7 @@
 -- Engine
 
 local math = require("math")
+local physics = require("physics")
 
 -- Data
 
@@ -18,10 +19,10 @@ local score = {}
 score.player = 0
 score.enemy = 0
 
-local ball_speed = 4
+local ball_speed = 256
 local ball_velocity = {}
 ball_velocity.x = ball_speed
-ball_velocity.y = ball_speed
+ball_velocity.y = 0
 
 -- Setup
 
@@ -37,6 +38,13 @@ local player = display.newRect( 0, 160, paddle_size.x, paddle_size.y )
 local enemy = display.newRect( 480, 160, paddle_size.x, paddle_size.y )
 local ball = display.newCircle( 240, 160, 16 )
 
+physics.start()
+physics.setGravity( 0, 0 )
+
+physics.addBody( player, "static" )
+physics.addBody( enemy, "static" )
+physics.addBody( ball, "dynamic", {bounce = 0.8})
+
 -- Functions
 
 local function playerMove(event)
@@ -48,12 +56,18 @@ local function playerMove(event)
     end
 end
 
+local function onBallCollide(event)
+    if (event.phase == "began") then
+        ball_velocity.x = -ball_velocity.x
+    end
+end
+
 local function ballMove()
-    ball.x = ball.x + ball_velocity.x
-    ball.y = ball.y + ball_velocity.y
+    ball:setLinearVelocity( ball_velocity.x, ball_velocity.y )
 end
 
 -- Main
 
 Runtime:addEventListener("touch", playerMove)
+ball:addEventListener("collision", onBallCollide)
 Runtime:addEventListener("lateUpdate", ballMove)
