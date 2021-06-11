@@ -15,18 +15,19 @@ local paddle_size = {}
 paddle_size.x = 24
 paddle_size.y = 128
 
-local score = {}
-score.player = 0
-score.enemy = 0
-
 local ball_speed = 256
 local ball_velocity = {}
 ball_velocity.x = ball_speed
 ball_velocity.y = 0
 
+local score = {}
+score.player = 0
+score.enemy = 0
+
+
 -- Setup
 
-local backgroundLine = display.newLine( 240, 0, 240, 480 )
+local backgroundLine = display.newLine( 240, 0, 240, 320 )
 backgroundLine:setStrokeColor(0.30)
 
 local playerScore = display.newText( score.player, 160, 48 )
@@ -58,8 +59,56 @@ end
 
 local function onBallCollide(event)
     if (event.phase == "began") then
-        ball_velocity.x = -ball_velocity.x
+        -- Paddle bounce
+        if (event.other == player or event.other == enemy) then
+            -- Direction randomizer
+            local direction = math.random(-1, 1)
+            if (direction == 0) then dir = 1 end
+
+            ball_velocity.x = -ball_velocity.x
+            ball_velocity.y = ball_speed * direction
+        end
     end
+end
+
+local function resetBall()
+    ball.x = 240
+    ball.y = 160
+end
+
+local function boundaryCheck()
+      local boundaryCollided
+      local ballGoneLeft
+      local ballGoneRight
+
+      if (ball.y <= 16 or ball.y >= 304) then
+          boundaryCollided = true
+      else
+          boundaryCollided = false
+      end
+
+      if (ball.x < 0) then ballGoneLeft = true
+      elseif (ball.x > 480) then ballGoneRight = true
+      else
+          ballGoneLeft = false
+          ballGoneRight = false
+      end
+
+      if (boundaryCollided) then
+          ball_velocity.y = -ball_velocity.y
+      end
+
+      if (ballGoneLeft) then
+          resetBall()
+          score.player = score.player + 1
+          playerScore.text = score.player
+      end
+
+      if (ballGoneRight) then
+          resetBall()
+          score.enemy = score.enemy + 1
+          enemyScore.text = score.enemy
+      end
 end
 
 local function ballMove()
@@ -70,4 +119,5 @@ end
 
 Runtime:addEventListener("touch", playerMove)
 ball:addEventListener("collision", onBallCollide)
+Runtime:addEventListener("enterFrame", boundaryCheck)
 Runtime:addEventListener("lateUpdate", ballMove)
