@@ -100,14 +100,14 @@ local function boundaryCheck()
 
       if (ballGoneLeft) then
           resetBall()
-          score.player = score.player + 1
-          playerScore.text = score.player
+          score.enemy = score.enemy + 1
+          enemyScore.text = score.enemy
       end
 
       if (ballGoneRight) then
           resetBall()
-          score.enemy = score.enemy + 1
-          enemyScore.text = score.enemy
+          score.player = score.player + 1
+          playerScore.text = score.player
       end
 end
 
