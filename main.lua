@@ -115,9 +115,17 @@ local function ballMove()
     ball:setLinearVelocity( ball_velocity.x, ball_velocity.y )
 end
 
+local function enemyMove()
+    transition.to(enemy, {y = ball.y, time = 800})
+
+    if (enemy.y < 80) then enemy.y = 80
+    elseif (enemy.y > 240) then enemy.y = 240 end
+end
+
 -- Main
 
 Runtime:addEventListener("touch", playerMove)
 ball:addEventListener("collision", onBallCollide)
 Runtime:addEventListener("enterFrame", boundaryCheck)
 Runtime:addEventListener("lateUpdate", ballMove)
+Runtime:addEventListener("lateUpdate", enemyMove)
