@@ -4,6 +4,8 @@
 --
 -----------------------------------------------------------------------------------------
 
+--Written by George Oganov (oganov2001)
+
 -- Engine
 
 local math = require("math")
